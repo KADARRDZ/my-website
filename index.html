@@ -2,43 +2,140 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>موقع العرض الخاص بي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعي مع لوحة التحكم الفورية</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #f0f0f0; padding: 50px; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background: #f0f0f0; 
+            padding: 50px; 
+            direction: rtl; 
+        }
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            max-width: 600px; 
+            margin: 0 auto; 
+        }
         h1 { color: #333; }
+        p { color: #666; font-size: 18px; }
+        
+        /* تصميم لوحة التحكم بالأسفل */
+        .admin-panel { 
+            margin-top: 50px; 
+            background: #222; 
+            color: white; 
+            padding: 25px; 
+            border-radius: 10px; 
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        label { display: block; text-align: right; margin-right: 5%; font-weight: bold; margin-top: 10px; }
+        input { 
+            display: block; 
+            width: 90%; 
+            margin: 10px auto; 
+            padding: 12px; 
+            font-size: 16px; 
+            border-radius: 5px; 
+            border: 1px solid #ccc; 
+            box-sizing: border-box;
+        }
+        button { 
+            display: block; 
+            width: 90%; 
+            margin: 20px auto 10px auto; 
+            padding: 12px; 
+            font-size: 16px; 
+            border-radius: 5px; 
+            border: none; 
+            background: #28a745; 
+            color: white; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+        button:hover { background: #218838; }
     </style>
 </head>
 <body>
 
+    <!-- 1️⃣ قسم العرض (ما يشاهده زوار الموقع) -->
     <div class="card">
-        <!-- هذا النص سيتغير بناءً على موقع التحكم -->
-        <h1 id="main-title">مرحباً بك في موقعي!</h1>
-        <p id="main-text">انتظر تعديل النص من لوحة التحكم...</p>
+        <h1 id="main-title">تحميل البيانات...</h1>
+        <p id="main-text">يرجى الانتظار أو كتابة نص جديد بالأسفل وحفظه.</p>
     </div>
 
-    <!-- ربط مكتبة Firebase لجلب البيانات -->
+    <!-- 2️⃣ قسم لوحة التحكم الفورية وحفظ التعديلات -->
+    <div class="admin-panel">
+        <h3>🛠️ لوحة التحكم بالموقع</h3>
+        
+        <label>العنوان الجديد للموقع:</label>
+        <input type="text" id="title-input" placeholder="اكتب العنوان الجديد هنا...">
+
+        <label>النص أو الوصف الجديد:</label>
+        <input type="text" id="text-input" placeholder="اكتب الوصف الجديد هنا...">
+
+        <!-- زر حفظ التعديلات الفعلي -->
+        <button onclick="saveChanges()">💾 حفظ التعديلات الفورية</button>
+    </div>
+
+    <!-- ربط مكتبات الـ Firebase المطلوبة -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
     <script>
-        // ضع هنا بيانات مشروع Firebase الخاص بك
+        // إعدادات الربط الخاصة بمشروعك (مأخوذة من لقطات الشاشة الخاصة بك)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            databaseURL: "YOUR_DATABASE_URL",
-            projectId: "YOUR_PROJECT_ID"
+            apiKey: "AIzaSyD-YOUR-ACTUAL-API-KEY", // يمكنك استبداله بمفتاحك الحقيقي إذا أردت، أو اتركه مؤقتاً لتجربته مع قواعد البيانات المفتوحة
+            databaseURL: "https://firebaseio.com",
+            projectId: "siteweb-02"
         };
+        
+        // تشغيل الفايربيز
         firebase.initializeApp(firebaseConfig);
-
-        // جلب النص وعرضه تلقائياً عند أي تغيير
         const db = firebase.database().ref('siteData');
+
+        // جلب وعرض البيانات في الكرت الأبيض فوراً وتحديثها بدون ريفريش
         db.on('value', (snapshot) => {
             const data = snapshot.val();
-            if(data) {
+            if (data) {
                 document.getElementById('main-title').innerText = data.title;
                 document.getElementById('main-text').innerText = data.text;
+            } else {
+                document.getElementById('main-title').innerText = "مرحباً بك!";
+                document.getElementById('main-text').innerText = "اكتب نصاً في الأسفل واضغط حفظ ليظهر هنا.";
             }
         });
+
+        // دالة حفظ التعديلات الفعلية وإرسالها إلى الفايربيز
+        function saveChanges() {
+            const newTitle = document.getElementById('title-input').value;
+            const newText = document.getElementById('text-input').value;
+
+            // التأكد من أن المستخدم كتب نصوصاً في الخانات قبل الحفظ
+            if (newTitle.trim() === "" || newText.trim() === "") {
+                alert("تنبيه: يرجى ملء خانة العنوان وخانة الوصف أولاً!");
+                return;
+            }
+
+            // إرسال البيانات وحفظها فعلياً في الفايربيز
+            db.set({
+                title: newTitle,
+                text: newText
+            }).then(() => {
+                alert("✅ تم حفظ التعديلات بنجاح وتحديث الموقع للجميع!");
+                // مسح النص من الخانات بعد الحفظ بنجاح
+                document.getElementById('title-input').value = "";
+                document.getElementById('text-input').value = "";
+            }).catch((error) => {
+                alert("خطأ أثناء الحفظ، تأكد من إعدادات الـ Règles: " + error.message);
+            });
+        }
     </script>
 </body>
 </html>
