@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة التحكم بالموقع</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; padding: 40px; background: #222; color: white; }
+        input, button { display: block; width: 100%; max-width: 40px0px; margin: 15px 0; padding: 10px; font-size: 16px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>لوحة التحكم السرية</h2>
+    
+    <label>العنوان الجديد:</label>
+    <input type="text" id="title-input" placeholder="اكتب العنوان هنا">
+
+    <label>النص الجديد:</label>
+    <input type="text" id="text-input" placeholder="اكتب وصف الموقع هنا">
+
+    <button onclick="updateSite()">تحديث الموقع الآن</button>
+
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+
+    <script>
+        // يجب أن تكون نفس بيانات Firebase للموقع الأول
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        const db = firebase.database().ref('siteData');
+
+        // دالة إرسال التعديلات لقاعدة البيانات
+        function updateSite() {
+            const newTitle = document.getElementById('title-input').value;
+            const newText = document.getElementById('text-input').value;
+
+            db.set({
+                title: newTitle,
+                text: newText
+            }).then(() => {
+                alert("تم تحديث الموقع بنجاح!");
+            });
+        }
+    </script>
+</body>
+</html>

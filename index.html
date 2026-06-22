@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>موقع العرض الخاص بي</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f0f0f0; padding: 50px; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- هذا النص سيتغير بناءً على موقع التحكم -->
+        <h1 id="main-title">مرحباً بك في موقعي!</h1>
+        <p id="main-text">انتظر تعديل النص من لوحة التحكم...</p>
+    </div>
+
+    <!-- ربط مكتبة Firebase لجلب البيانات -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+
+    <script>
+        // ضع هنا بيانات مشروع Firebase الخاص بك
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // جلب النص وعرضه تلقائياً عند أي تغيير
+        const db = firebase.database().ref('siteData');
+        db.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                document.getElementById('main-title').innerText = data.title;
+                document.getElementById('main-text').innerText = data.text;
+            }
+        });
+    </script>
+</body>
+</html>
