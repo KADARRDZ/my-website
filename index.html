@@ -84,23 +84,27 @@
         <button onclick="saveChanges()">💾 حفظ التعديلات الفورية</button>
     </div>
 
-    <!-- ربط مكتبات الـ Firebase المطلوبة -->
+    <!-- ربط مكتبات الـ Firebase المطلوبة لتشغيل قاعدة البيانات -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
     <script>
-        // إعدادات الربط الخاصة بمشروعك (مأخوذة من لقطات الشاشة الخاصة بك)
+        // إعدادات الربط الحقيقية والخاصة بمشروعك SITEWEB 02
         const firebaseConfig = {
-            apiKey: "AIzaSyD-YOUR-ACTUAL-API-KEY", // يمكنك استبداله بمفتاحك الحقيقي إذا أردت، أو اتركه مؤقتاً لتجربته مع قواعد البيانات المفتوحة
-            databaseURL: "https://firebaseio.com",
-            projectId: "siteweb-02"
+            apiKey: "AIzaSyBWmp2i3T00yxGhUBvDsXPUF-ARg9jCFGI",
+            authDomain: "siteweb-02.firebaseapp.com",
+            databaseURL: "https://siteweb-02-default-rtdb.firebaseio.com",
+            projectId: "siteweb-02",
+            storageBucket: "siteweb-02.firebasestorage.app",
+            messagingSenderId: "351318877707",
+            appId: "1:351318877707:web:51a4afde2adf82834e090e"
         };
         
-        // تشغيل الفايربيز
+        // تشغيل الفايربيز والربط مع قاعدة البيانات الفورية
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database().ref('siteData');
 
-        // جلب وعرض البيانات في الكرت الأبيض فوراً وتحديثها بدون ريفريش
+        // جلب وعرض البيانات وتحديثها تلقائياً بدون الحاجة لعمل ريفريش للصفحة
         db.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -112,12 +116,12 @@
             }
         });
 
-        // دالة حفظ التعديلات الفعلية وإرسالها إلى الفايربيز
+        // دالة حفظ التعديلات وإرسالها إلى قاعدة البيانات
         function saveChanges() {
             const newTitle = document.getElementById('title-input').value;
             const newText = document.getElementById('text-input').value;
 
-            // التأكد من أن المستخدم كتب نصوصاً في الخانات قبل الحفظ
+            // التأكد من ملء الخانات قبل الحفظ
             if (newTitle.trim() === "" || newText.trim() === "") {
                 alert("تنبيه: يرجى ملء خانة العنوان وخانة الوصف أولاً!");
                 return;
@@ -129,7 +133,7 @@
                 text: newText
             }).then(() => {
                 alert("✅ تم حفظ التعديلات بنجاح وتحديث الموقع للجميع!");
-                // مسح النص من الخانات بعد الحفظ بنجاح
+                // تفريغ الخانات بعد الحفظ
                 document.getElementById('title-input').value = "";
                 document.getElementById('text-input').value = "";
             }).catch((error) => {
