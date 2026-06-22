@@ -3,142 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي مع لوحة التحكم الفورية</title>
+    <title>ملف المطور بيرلس</title>
+    <link rel="stylesheet" href="https://cloudflare.com">
     <style>
+        :root {
+            --main-color: #00f2fe;
+            --secondary-color: #4facfe;
+            --bg-1: #0f172a;
+            --bg-2: #1e1b4b;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            transition: 0.3s; 
+        }
+
         body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            background: #f0f0f0; 
-            padding: 50px; 
+            font-family: sans-serif; 
+            background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             direction: rtl; 
+            padding: 20px;
         }
-        .card { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            max-width: 600px; 
-            margin: 0 auto; 
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 35px 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
         }
-        h1 { color: #333; }
-        p { color: #666; font-size: 18px; }
-        
-        /* تصميم لوحة التحكم بالأسفل */
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px auto;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--main-color), var(--secondary-color));
+            padding: 3px;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .avatar i {
+            width: 100%;
+            height: 100%;
+            background: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: var(--main-color);
+        }
+
+        h1 { 
+            font-size: 28px; 
+            margin-bottom: 5px; 
+            background: linear-gradient(45deg, #fff, var(--main-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .job-title {
+            font-size: 16px;
+            color: var(--main-color);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .bio {
+            font-size: 15px;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(45deg, var(--main-color), var(--secondary-color));
+            transform: translateY(-3px);
+        }
+
+        .secret-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.2);
+            cursor: pointer;
+            margin-top: 30px;
+            font-size: 13px;
+        }
+
+        .secret-btn:hover { 
+            color: var(--main-color); 
+        }
+
         .admin-panel { 
-            margin-top: 50px; 
-            background: #222; 
-            color: white; 
-            padding: 25px; 
-            border-radius: 10px; 
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-top: 20px; 
+            background: #111827; 
+            border: 1px solid #374151;
+            padding: 20px; 
+            border-radius: 15px; 
+            max-width: 450px;
+            width: 100%;
+            display: none;
         }
-        label { display: block; text-align: right; margin-right: 5%; font-weight: bold; margin-top: 10px; }
-        input { 
-            display: block; 
-            width: 90%; 
-            margin: 10px auto; 
-            padding: 12px; 
-            font-size: 16px; 
-            border-radius: 5px; 
-            border: 1px solid #ccc; 
-            box-sizing: border-box;
+
+        .admin-panel h3 { 
+            margin-bottom: 12px; 
+            color: var(--main-color); 
+            font-size: 18px;
         }
-        button { 
+
+        .grid-inputs { 
+            display: flex; 
+            gap: 10px; 
+        }
+
+        .grid-inputs div { 
+            flex: 1; 
+        }
+
+        label { 
             display: block; 
-            width: 90%; 
-            margin: 20px auto 10px auto; 
-            padding: 12px; 
-            font-size: 16px; 
-            border-radius: 5px; 
+            text-align: right; 
+            font-size: 12px; 
+            color: #94a3b8; 
+            margin-top: 8px; 
+        }
+
+        input, textarea { 
+            display: block; 
+            width: 100%; 
+            margin-top: 4px;
+            padding: 8px; 
+            font-size: 13px; 
+            border-radius: 6px; 
+            border: 1px solid #374151; 
+            background: #1f2937;
+            color: white;
+        }
+
+        input[type="color"] { 
+            height: 35px; 
+            padding: 2px; 
+            cursor: pointer; 
+        }
+        
+        .save-btn { 
+            display: block; 
+            width: 100%; 
+            margin-top: 15px; 
+            padding: 10px; 
+            font-size: 15px; 
+            border-radius: 6px; 
             border: none; 
-            background: #28a745; 
+            background: linear-gradient(45deg, #10b981, #059669);
             color: white; 
             cursor: pointer; 
             font-weight: bold; 
         }
-        button:hover { background: #218838; }
     </style>
 </head>
 <body>
 
-    <!-- 1️⃣ قسم العرض (ما يشاهده زوار الموقع) -->
-    <div class="card">
-        <h1 id="main-title">تحميل البيانات...</h1>
-        <p id="main-text">يرجى الانتظار أو كتابة نص جديد بالأسفل وحفظه.</p>
-    </div>
-
-    <!-- 2️⃣ قسم لوحة التحكم الفورية وحفظ التعديلات -->
-    <div class="admin-panel">
-        <h3>🛠️ لوحة التحكم بالموقع</h3>
+    <!-- الواجهة التي يراها الزوار -->
+    <div class="profile-card">
+        <div class="avatar">
+            <i class="fa-solid fa-code"></i>
+        </div>
+        <h1 id="v-name">بيرلس | Perles</h1>
+        <div class="job-title" id="v-title">مطور ويب متكامل</div>
+        <p class="bio" id="v-bio">مرحباً بك في موقعي الشخصي للتطوير البرمجي.</p>
         
-        <label>العنوان الجديد للموقع:</label>
-        <input type="text" id="title-input" placeholder="اكتب العنوان الجديد هنا...">
-
-        <label>النص أو الوصف الجديد:</label>
-        <input type="text" id="text-input" placeholder="اكتب الوصف الجديد هنا...">
-
-        <!-- زر حفظ التعديلات الفعلي -->
-        <button onclick="saveChanges()">💾 حفظ التعديلات الفورية</button>
+        <div class="social-links">
+            <a href="#" id="v-gh" target="_blank"><i class="fa-brands fa-github"></i></a>
+            <a href="#" id="v-tw" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
     </div>
 
-    <!-- ربط مكتبات الـ Firebase المطلوبة لتشغيل قاعدة البيانات -->
+    <!-- زر الإعدادات السري -->
+    <button class="secret-btn" onclick="toggleBox()"><i class="fa-solid fa-gear"></i> إعدادات الموقع</button>
+
+    <!-- لوحة التحكم المخفية -->
+    <div class="admin-panel" id="adminBox">
+        <h3>🛠️ لوحة التحكم</h3>
+        
+        <label>الاسم الجديد:</label>
+        <input type="text" id="i-name" placeholder="الاسم...">
+
+        <label>المسمى الوظيفي:</label>
+        <input type="text" id="i-title" placeholder="التخصص...">
+
+        <label>الوصف:</label>
+        <textarea id="i-bio" rows="2" placeholder="نبذة قصيرة..."></textarea>
+
+        <div class="grid-inputs">
+            <div>
+                <label>رابط GitHub:</label>
+                <input type="text" id="i-gh" placeholder="https://...">
+            </div>
+            <div>
+                <label>رابط Twitter:</label>
+                <input type="text" id="i-tw" placeholder="https://...">
+            </div>
+        </div>
+
+        <div class="grid-inputs">
+            <div>
+                <label>اللون 1:</label>
+                <input type="color" id="i-c1" value="#00f2fe">
+            </div>
+            <div>
+                <label>اللون 2:</label>
+                <input type="color" id="i-c2" value="#4facfe">
+            </div>
+        </div>
+
+        <button class="save-btn" onclick="saveData()">💾 حفظ التعديلات</button>
+    </div>
+
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
     <script>
-        // إعدادات الربط الحقيقية والخاصة بمشروعك SITEWEB 02
+        // إعدادات مشروع Firebase الخاص بك SITEWEB 02
         const firebaseConfig = {
             apiKey: "AIzaSyBWmp2i3T00yxGhUBvDsXPUF-ARg9jCFGI",
-            authDomain: "siteweb-02.firebaseapp.com",
-            databaseURL: "https://siteweb-02-default-rtdb.firebaseio.com",
+            authDomain: "://firebaseapp.com",
+            databaseURL: "https://firebaseio.com",
             projectId: "siteweb-02",
             storageBucket: "siteweb-02.firebasestorage.app",
             messagingSenderId: "351318877707",
             appId: "1:351318877707:web:51a4afde2adf82834e090e"
         };
         
-        // تشغيل الفايربيز والربط مع قاعدة البيانات الفورية
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database().ref('siteData');
+        const db = firebase.database().ref('portfolioData');
 
-        // جلب وعرض البيانات وتحديثها تلقائياً بدون الحاجة لعمل ريفريش للصفحة
+        // قراءة وتطبيق البيانات فوراُ
         db.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                document.getElementById('main-title').innerText = data.title;
-                document.getElementById('main-text').innerText = data.text;
-            } else {
-                document.getElementById('main-title').innerText = "مرحباً بك!";
-                document.getElementById('main-text').innerText = "اكتب نصاً في الأسفل واضغط حفظ ليظهر هنا.";
+                document.getElementById('v-name').innerText = data.name || "بيرلس";
+                document.getElementById('v-title').innerText = data.title || "مطور";
+                document.getElementById('v-bio').innerText = data.bio || "";
+                document.getElementById('v-gh').href = data.github || "#";
+                document.getElementById('v-tw').href = data.twitter || "#";
+                
+                document.documentElement.style.setProperty('--main-color', data.color1 || '#00f2fe');
+                document.documentElement.style.setProperty('--secondary-color', data.color2 || '#4facfe');
             }
         });
 
-        // دالة حفظ التعديلات وإرسالها إلى قاعدة البيانات
-        function saveChanges() {
-            const newTitle = document.getElementById('title-input').value;
-            const newText = document.getElementById('text-input').value;
+        // حفظ البيانات
+        function saveData() {
+            const name = document.getElementById('i-name').value;
+            const title = document.getElementById('i-title').value;
+            const bio = document.getElementById('i-bio').value;
+            const github = document.getElementById('i-gh').value;
+            const twitter = document.getElementById('i-tw').value;
+            const color1 = document.getElementById('i-c1').value;
+            const color2 = document.getElementById('i-c2').value;
 
-            // التأكد من ملء الخانات قبل الحفظ
-            if (newTitle.trim() === "" || newText.trim() === "") {
-                alert("تنبيه: يرجى ملء خانة العنوان وخانة الوصف أولاً!");
+            if (name.trim() === "" || title.trim() === "") {
+                alert("اكتب الاسم والتخصص أولاً!");
                 return;
             }
 
-            // إرسال البيانات وحفظها فعلياً في الفايربيز
             db.set({
-                title: newTitle,
-                text: newText
+                name: name, title: title, bio: bio,
+                github: github, twitter: twitter,
+                color1: color1, color2: color2
             }).then(() => {
-                alert("✅ تم حفظ التعديلات بنجاح وتحديث الموقع للجميع!");
-                // تفريغ الخانات بعد الحفظ
-                document.getElementById('title-input').value = "";
-                document.getElementById('text-input').value = "";
-            }).catch((error) => {
-                alert("خطأ أثناء الحفظ، تأكد من إعدادات الـ Règles: " + error.message);
+                alert("✅ تم التعديل!");
+            }).catch((e) => {
+                alert("خطأ: " + e.message);
             });
+        }
+
+        // إظهار اللوحة المخفية
+        function toggleBox() {
+            const box = document.getElementById('adminBox');
+            box.style.display = (box.style.display === "block") ? "none" : "block";
         }
     </script>
 </body>
